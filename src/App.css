@@ -39,7 +39,7 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   background: linear-gradient(to right, #ffffff, #cbd5e1);
-  -webkit-background-clip: text; 
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -135,7 +135,7 @@
   gap: 1rem;
 }
 
-/* Botones */
+/* Botones Generales */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -157,6 +157,15 @@
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
 }
 
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  background: #475569;
+  color: var(--text-primary);
+}
 
 /* Contenedor de Lista y Filtros */
 .task-list-container {
@@ -299,10 +308,48 @@
   color: var(--text-secondary);
 }
 
+/* Título con toggle */
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.toggle-status-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.toggle-status-btn:hover .icon-pending {
+  color: var(--primary);
+}
+
+.icon-completed {
+  color: var(--success);
+}
+
+.icon-pending {
+  color: var(--text-muted);
+}
+
 .task-title {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.title-completed {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-card-completed {
+  opacity: 0.8;
+  border-color: rgba(16, 185, 129, 0.25);
 }
 
 .task-desc {
@@ -327,18 +374,83 @@
   gap: 0.4rem;
 }
 
-.status-wait {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  color: #f59e0b;
+/* Botones de acción */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.status-done {
+.action-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+}
+
+.action-btn:hover {
+  color: var(--text-primary);
+  background: #475569;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 1rem;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  padding: 1.75rem;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.btn-icon {
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 50%;
+  padding: 0.25rem;
+  display: flex;
+}
+
+.btn-icon:hover {
+  color: var(--text-primary);
+  background: var(--bg-input);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .empty-state {

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Search, CheckCircle2, Clock, Calendar, Tag, AlertCircle } from 'lucide-react';
+import { Search, CheckCircle2, Circle, Edit3, Calendar, Tag, AlertCircle } from 'lucide-react';
 
-export function TaskList({ tasks }) {
-  // Estados locales para los filtros de búsqueda y estado
+export function TaskList({ tasks, onToggleTask, onEditTask }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'completed'
+  const [filterStatus, setFilterStatus] = useState('all');
 
-  // Filtrado reactivo en tiempo real (estado derivado)
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -17,7 +15,6 @@ export function TaskList({ tasks }) {
     return matchesSearch;
   });
 
-  // Métricas rápidas
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.completed).length;
   const pendingTasks = totalTasks - completedTasks;
@@ -27,7 +24,6 @@ export function TaskList({ tasks }) {
       <div className="list-header">
         <h3 className="section-title">Listado de Tareas ({filteredTasks.length})</h3>
 
-        {/* Métricas */}
         <div className="metrics-bar">
           <span className="metric-pill">Total: {totalTasks}</span>
           <span className="metric-pill metric-pending">Pendientes: {pendingTasks}</span>
@@ -35,7 +31,6 @@ export function TaskList({ tasks }) {
         </div>
       </div>
 
-      {/* Barra de Filtros y Búsqueda */}
       <div className="filters-wrapper">
         <div className="search-box">
           <Search size={16} className="search-icon" />
@@ -72,7 +67,6 @@ export function TaskList({ tasks }) {
         </div>
       </div>
 
-      {/* Lista de Tareas con .map() */}
       {filteredTasks.length === 0 ? (
         <div className="empty-state">
           <AlertCircle size={36} color="var(--text-muted)" />
@@ -94,7 +88,25 @@ export function TaskList({ tasks }) {
                 </span>
               </div>
 
-              <h4 className="task-title">{task.title}</h4>
+              {/* Título con toggle para marcar completada */}
+              <div className="card-title-row">
+                <button
+                  type="button"
+                  className="toggle-status-btn"
+                  title={task.completed ? 'Marcar como pendiente' : 'Marcar como completada'}
+                  onClick={() => onToggleTask && onToggleTask(task.id)}
+                >
+                  {task.completed ? (
+                    <CheckCircle2 size={22} className="icon-completed" />
+                  ) : (
+                    <Circle size={22} className="icon-pending" />
+                  )}
+                </button>
+                <h4 className={`task-title ${task.completed ? 'title-completed' : ''}`}>
+                  {task.title}
+                </h4>
+              </div>
+
               {task.description && <p className="task-desc">{task.description}</p>}
 
               <div className="card-footer">
@@ -102,12 +114,17 @@ export function TaskList({ tasks }) {
                   <Calendar size={13} />
                   <span>Vence: {task.dueDate}</span>
                 </div>
-                <div className="task-status-pill">
-                  {task.completed ? (
-                    <span className="status-done"><CheckCircle2 size={14} /> Lista</span>
-                  ) : (
-                    <span className="status-wait"><Clock size={14} /> Pendiente</span>
-                  )}
+
+                {/* Botón de Editar */}
+                <div className="card-actions">
+                  <button
+                    type="button"
+                    className="action-btn"
+                    onClick={() => onEditTask && onEditTask(task)}
+                    title="Editar tarea"
+                  >
+                    <Edit3 size={15} /> Editar
+                  </button>
                 </div>
               </div>
             </article>
