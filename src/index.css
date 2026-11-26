@@ -55,6 +55,13 @@ input, textarea, select {
   padding: 0.65rem 0.9rem;
   outline: none;
   transition: border-color 0.2s;
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+  max-height: 180px;
 }
 
 input:focus, textarea:focus, select:focus {
