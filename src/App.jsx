@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layers, GitBranch, Terminal } from 'lucide-react';
 import './App.css';
+import { TaskForm } from './components/TaskForm';
 
 function App() {
+
+  const [tasks, setTasks] = useState([]);
+
+  const handleAddTask = (newTask) => {
+    setTasks([newTask, ...tasks])
+    console.log('Tarea agregada exitosamente', newTask);
+  }; 
+
   return (
     <div className="app-container">
       {/* Header */}
@@ -13,7 +22,7 @@ function App() {
           </div>
           <div>
             <h1 className="brand-title">TaskFlow CRUD</h1>
-            <p className="brand-subtitle">Programación III • Demostración de Git Flow & React</p>
+           
           </div>
         </div>
 
@@ -29,19 +38,19 @@ function App() {
 
       {/* Main Container */}
       <main className="dashboard-grid">
-        <section className="card">
-          <h2 className="card-title">Módulo de Tareas</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Inicializando estructura base para ramas de características (features).
-          </p>
-        </section>
+      <section className="card">
+          <TaskForm onAddTask={handleAddTask} />
+
+      </section>
 
         <section className="card">
-          <h2 className="card-title">Panel de Control</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            Visualización y administración de tareas en desarrollo.
-          </p>
-        </section>
+        <h2 className="card-title">Panel de Control</h2>
+        <div style={{ padding: '1rem', background: 'var(--bg-input)', borderRadius: 'var(--radius-sm)' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          Tareas en memoria: <strong>{tasks.length}</strong>
+         </p>
+  </div>
+</section>
       </main>
     </div>
   );
