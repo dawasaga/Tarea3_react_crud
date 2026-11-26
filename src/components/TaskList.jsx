@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Search, CheckCircle2, Circle, Edit3, Calendar, Tag, AlertCircle } from 'lucide-react';
+import { Search, CheckCircle2, Circle, Edit3, Trash2, Calendar, Tag, AlertCircle } from 'lucide-react';
 
-export function TaskList({ tasks, onToggleTask, onEditTask }) {
+export function TaskList({ tasks, onToggleTask, onEditTask, onDeleteTask, onClearCompleted }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
@@ -28,6 +28,16 @@ export function TaskList({ tasks, onToggleTask, onEditTask }) {
           <span className="metric-pill">Total: {totalTasks}</span>
           <span className="metric-pill metric-pending">Pendientes: {pendingTasks}</span>
           <span className="metric-pill metric-completed">Completadas: {completedTasks}</span>
+          {completedTasks > 0 && (
+            <button
+              type="button"
+              className="btn-clear-completed"
+              onClick={onClearCompleted}
+              title="Eliminar todas las tareas completadas"
+            >
+              <Trash2 size={13} /> Limpiar completadas
+            </button>
+          )}
         </div>
       </div>
 
@@ -115,15 +125,23 @@ export function TaskList({ tasks, onToggleTask, onEditTask }) {
                   <span>Vence: {task.dueDate}</span>
                 </div>
 
-                {/* Botón de Editar */}
+                {/* Acciones: Editar y Eliminar */}
                 <div className="card-actions">
                   <button
                     type="button"
-                    className="action-btn"
+                    className="action-btn edit-btn"
                     onClick={() => onEditTask && onEditTask(task)}
                     title="Editar tarea"
                   >
                     <Edit3 size={15} /> Editar
+                  </button>
+                  <button
+                    type="button"
+                    className="action-btn delete-btn"
+                    onClick={() => onDeleteTask && onDeleteTask(task.id)}
+                    title="Eliminar tarea"
+                  >
+                    <Trash2 size={15} /> Eliminar
                   </button>
                 </div>
               </div>
