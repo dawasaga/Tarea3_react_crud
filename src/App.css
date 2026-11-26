@@ -129,6 +129,14 @@
   color: var(--text-secondary);
 }
 
+.form-group textarea {
+  resize: vertical;
+  max-width: 100%;
+  min-height: 80px;
+  max-height: 160px;
+  box-sizing: border-box;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
