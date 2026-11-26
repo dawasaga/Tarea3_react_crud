@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layers } from 'lucide-react';
 import './App.css';
 import { TaskForm } from './components/TaskForm';
@@ -6,15 +6,29 @@ import { TaskList } from './components/TaskList';
 import { TaskEditModal } from './components/TaskEditModal';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  // Inicializamos el estado leyendo desde LocalStorage
+  const [tasks, setTasks] = useState(() => {
+    try {
+      const savedTasks = localStorage.getItem('taskflow_tasks');
+      return savedTasks ? JSON.parse(savedTasks) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [editingTask, setEditingTask] = useState(null);
+
+  // Hook useEffect: Guarda automáticamente en LocalStorage cada vez que cambien las tareas
+  useEffect(() => {
+    localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   // Agregar nueva tarea (Create)
   const handleAddTask = (newTask) => {
     setTasks([newTask, ...tasks]);
   };
 
-  // Alternar completada / pendiente (Update rápido con .map)
+  // Alternar completada / pendiente (Update)
   const handleToggleTask = (id) => {
     setTasks(
       tasks.map((task) =>
@@ -23,12 +37,28 @@ function App() {
     );
   };
 
-  // Guardar tarea editada (Update completo con .map)
+  // Guardar tarea editada (Update)
   const handleSaveTask = (updatedTask) => {
     setTasks(
       tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
-    setEditingTask(null); // Cierra el modal
+    setEditingTask(null);
+  };
+
+  // Eliminar tarea individual (Delete con .filter)
+  const handleDeleteTask = (id) => {
+    const confirmDelete = window.confirm('¿Seguro que deseas eliminar esta tarea?');
+    if (confirmDelete) {
+      setTasks(tasks.filter((task) => task.id !== id));
+    }
+  };
+
+  // Limpiar todas las tareas completadas
+  const handleClearCompleted = () => {
+    const confirmClear = window.confirm('¿Seguro que deseas eliminar todas las tareas completadas?');
+    if (confirmClear) {
+      setTasks(tasks.filter((task) => !task.completed));
+    }
   };
 
   return (
@@ -56,6 +86,8 @@ function App() {
             tasks={tasks}
             onToggleTask={handleToggleTask}
             onEditTask={(task) => setEditingTask(task)}
+            onDeleteTask={handleDeleteTask}
+            onClearCompleted={handleClearCompleted}
           />
         </section>
       </main>
