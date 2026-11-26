@@ -33,6 +33,7 @@ La arquitectura y flujo de desarrollo sigue estrictamente la metodología **Git 
 3. `feature/task-update-status` (Update): Cambio de estado (pendiente/completada) y edición modal.
 4. `feature/task-delete-clear` (Delete): Eliminación individual, vaciado masivo y sincronización con LocalStorage.
 5. `hotfix/fix-empty-validation` (Hotfix): Validación contra entradas vacías, fechas inválidas y alertas de estado.
+6. `hotfix/fix-textarea-resize` (Hotfix): Restricción de redimensionamiento de textarea para prevenir desbordamiento visual en la interfaz.
 
 ---
 
