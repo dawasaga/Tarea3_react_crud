@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
-import { Layers, GitBranch, Terminal } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import './App.css';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
+import { TaskEditModal } from './components/TaskEditModal';
 
 function App() {
-
   const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
 
+  // Agregar nueva tarea (Create)
   const handleAddTask = (newTask) => {
-    setTasks([newTask, ...tasks])
-    console.log('Tarea agregada exitosamente', newTask);
-  }; 
+    setTasks([newTask, ...tasks]);
+  };
+
+  // Alternar completada / pendiente (Update rápido con .map)
+  const handleToggleTask = (id) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
+  // Guardar tarea editada (Update completo con .map)
+  const handleSaveTask = (updatedTask) => {
+    setTasks(
+      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setEditingTask(null); // Cierra el modal
+  };
 
   return (
     <div className="app-container">
@@ -23,31 +41,33 @@ function App() {
           </div>
           <div>
             <h1 className="brand-title">TaskFlow CRUD</h1>
-           
           </div>
-        </div>
-
-        <div className="badges-group">
-          <span className="badge badge-gitflow">
-            <GitBranch size={14} /> Git Flow Enabled
-          </span>
-          <span className="badge">
-            <Terminal size={14} /> React + Vite
-          </span>
         </div>
       </header>
 
       {/* Main Container */}
       <main className="dashboard-grid">
-      <section className="card">
+        <section className="card">
           <TaskForm onAddTask={handleAddTask} />
-
-      </section>
+        </section>
 
         <section className="card">
-          <TaskList tasks={tasks} />
+          <TaskList
+            tasks={tasks}
+            onToggleTask={handleToggleTask}
+            onEditTask={(task) => setEditingTask(task)}
+          />
         </section>
       </main>
+
+      {/* Modal de edición condicional */}
+      {editingTask && (
+        <TaskEditModal
+          task={editingTask}
+          onSave={handleSaveTask}
+          onClose={() => setEditingTask(null)}
+        />
+      )}
     </div>
   );
 }
