@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Layers, GitBranch, Terminal } from 'lucide-react';
 import './App.css';
 import { TaskForm } from './components/TaskForm';
+import { TaskList } from './components/TaskList';
 
 function App() {
 
@@ -44,13 +45,8 @@ function App() {
       </section>
 
         <section className="card">
-        <h2 className="card-title">Panel de Control</h2>
-        <div style={{ padding: '1rem', background: 'var(--bg-input)', borderRadius: 'var(--radius-sm)' }}>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Tareas en memoria: <strong>{tasks.length}</strong>
-         </p>
-  </div>
-</section>
+          <TaskList tasks={tasks} />
+        </section>
       </main>
     </div>
   );
