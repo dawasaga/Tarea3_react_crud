@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, AlertCircle } from 'lucide-react';
 
 export function TaskEditModal({ task, onSave, onClose }) {
   const [title, setTitle] = useState(task.title);
@@ -7,19 +7,22 @@ export function TaskEditModal({ task, onSave, onClose }) {
   const [priority, setPriority] = useState(task.priority);
   const [category, setCategory] = useState(task.category);
   const [dueDate, setDueDate] = useState(task.dueDate);
+  const [validationError, setValidationError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) {
-      alert('El título no puede estar vacío');
+    const trimmedTitle = title.trim();
+
+    // Hotfix: Validación estricta en edición
+    if (!trimmedTitle || trimmedTitle.length < 3) {
+      setValidationError('El título debe tener al menos 3 caracteres válidos.');
       return;
     }
 
-    // Devolvemos la tarea con sus nuevos valores
     onSave({
       ...task,
-      title,
-      description,
+      title: trimmedTitle,
+      description: description.trim(),
       priority,
       category,
       dueDate
@@ -36,13 +39,23 @@ export function TaskEditModal({ task, onSave, onClose }) {
           </button>
         </div>
 
+        {validationError && (
+          <div className="form-error-banner" style={{ marginBottom: '1rem' }}>
+            <AlertCircle size={16} />
+            <span>{validationError}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="task-form">
           <div className="form-group">
             <label>Título *</label>
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (validationError) setValidationError('');
+              }}
               required
             />
           </div>

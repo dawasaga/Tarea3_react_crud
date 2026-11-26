@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, AlertCircle } from 'lucide-react';
 
-export function TaskForm({ onAddTask }) {
-  // 1. Estado local para cada campo del formulario
+export function TaskForm({ onAddTask, onError }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Media');
   const [category, setCategory] = useState('Trabajo');
   const [dueDate, setDueDate] = useState('');
+  const [validationError, setValidationError] = useState('');
 
-  // 2. Manejador del envío del formulario
   const handleSubmit = (e) => {
-    e.preventDefault(); // Evita que el navegador recargue la página
+    e.preventDefault();
 
-    if (!title.trim()) {
-      alert('Por favor ingresa un título para la tarea.');
+    // Hotfix: Validación estricta contra espacios vacíos y longitud mínima
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle || trimmedTitle.length < 3) {
+      setValidationError('El título debe contener al menos 3 caracteres no vacíos.');
+      if (onError) onError('El título debe contener al menos 3 caracteres no vacíos.');
       return;
     }
 
-    // 3. Crear el nuevo objeto tarea
+    setValidationError('');
+
     const newTask = {
-      id: crypto.randomUUID(), // Genera un ID único automático
-      title,
-      description,
+      id: crypto.randomUUID(),
+      title: trimmedTitle,
+      description: description.trim(),
       priority,
       category,
       dueDate: dueDate || new Date().toISOString().split('T')[0],
@@ -30,10 +33,9 @@ export function TaskForm({ onAddTask }) {
       createdAt: new Date().toLocaleDateString('es-DO')
     };
 
-    // 4. Se lo enviamos al componente padre (App.jsx)
     onAddTask(newTask);
 
-    // 5. Limpiamos los campos del formulario
+    // Reset de campos
     setTitle('');
     setDescription('');
     setDueDate('');
@@ -43,13 +45,23 @@ export function TaskForm({ onAddTask }) {
     <form onSubmit={handleSubmit} className="task-form">
       <h3 className="form-heading">Nueva Tarea</h3>
 
+      {validationError && (
+        <div className="form-error-banner">
+          <AlertCircle size={16} />
+          <span>{validationError}</span>
+        </div>
+      )}
+
       <div className="form-group">
         <label>Título de la tarea *</label>
         <input
           type="text"
           placeholder="Ej: Estudiar Git Flow..."
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (validationError) setValidationError('');
+          }}
           required
         />
       </div>
